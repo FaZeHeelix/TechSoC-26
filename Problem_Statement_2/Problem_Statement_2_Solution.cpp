@@ -7,11 +7,11 @@
 
 
 
-bool y_n = 0;   // asking user for ai analysis
-bool y_n2 = 0; // asking user if they want to choose moves 
+bool y_n = 0;                                                                                                                       // asking user for ai analysis
+bool y_n2 = 0;                                                                                                                      // asking user if they want to choose moves 
 bool users_turn = 0;
 
-int users_wins = 0; //all the t_ are tournament stats
+int users_wins = 0;                                                                                                                 //all the t_ are tournament stats
 int t_battles = 0;
 int t_turns = 0;
 int t_critical_hits = 0;
@@ -24,14 +24,14 @@ int rando(int x, int y) {
     std::mt19937 gen(rd()); 
     std::uniform_int_distribution<int> distrib(x, y);
     return distrib(gen);
-} //random number generator function
+}                                                                                                                                   //random number generator function
 
 struct Move {
     std::string name;
     int move_power;
     std::string status_eff;
     
-}; //special structure for player moves
+};                                                                                                                                  //special structure for player moves
 
 
 class Bender {
@@ -54,15 +54,15 @@ class Bender {
         int critical_multiplier = 1;
         int critical_hit = rando(0,9);
         int frozen_prob = rando(0,1);
-        if (critical_hit==7) critical_multiplier = 2; //using the random number function to get a 1/10 probability
+        if (critical_hit==7) critical_multiplier = 2;                                                                                                           //using the random number function to get a 1/10 probability
         int final_damage = std::round(base_damage*type_multiplier*critical_multiplier);
         if (final_damage==0) final_damage = 1;
         enemy.hp -= final_damage;
         if(enemy.hp < 0) enemy.hp = 0;
         
-        std::cout << name << " used " << (moves[move_index]).name << "!" << std::endl; // printing the attack move
+        std::cout << name << " used " << (moves[move_index]).name << "!" << std::endl;                                                                          // printing the attack move
 
-        if(type_multiplier == 2) { std::cout << "Super Effective! (" << type << " is strong against " << enemy.type << ")" << std::endl; super_eff_count+=1;} // effective hits based on elemental advantage
+        if(type_multiplier == 2) { std::cout << "Super Effective! (" << type << " is strong against " << enemy.type << ")" << std::endl; super_eff_count+=1;}   // effective hits based on elemental advantage
         else if(type_multiplier == 0.5) { std::cout << "Not very effective... (" << type << " is weak against " << enemy.type << ")" << std::endl;}
         if (critical_multiplier == 2) {std::cout << "Critical Hit!" << std::endl; critical_count +=1;} // critical hit based on random 
         
@@ -113,7 +113,7 @@ class Duel {
     void start_duel() {
         std::array<std::string,4> elementlist = {"Water", "Fire", "Air", "Earth"};
 
-        for(int x = 0; x < 4; x++) { // deciding the type multiplier based on bender type
+        for(int x = 0; x < 4; x++) {                                                                                                                        // deciding the type multiplier based on bender type
             if (p1.type == elementlist[x]) {
                 for(int y = 0; y<4; y++) {
                     if (p2.type == elementlist[y]) {
@@ -134,15 +134,15 @@ class Duel {
         std::cout << "\t\t" << p1.name << " (" << p1.type << ", HP: " << p1.hp << "/" << p1.maxhp << ") VS "; 
         std::cout << p2.name << " (" << p2.type << ", HP: " << p2.hp << "/" << p2.maxhp << ")" << std::endl << std::endl << std::endl;
         int turn = 1;
-        int buried_turn_count = 0; // how many turns skipped while buried so far
-        int buried_turns = rando(1,4); // choosing how many number of turns skipped for burry
-        int frozen_turn_count = 0; // how many turns skipped while frozen so far
+        int buried_turn_count = 0;                                                                                                                          // how many turns skipped while buried so far
+        int buried_turns = rando(1,4);                                                                                                                      // choosing how many number of turns skipped for burry
+        int frozen_turn_count = 0;                                                                                                                          // how many turns skipped while frozen so far
         
         
         if(p1.speed>p2.speed)  { attacker = &p1; defender = &p2; users_turn = 1; } // deciding who starts first
         else if(p2.speed>p1.speed)  { attacker = &p2; defender = &p1; users_turn = 0; }
         else {
-            int rnum = rando(0,1); // again using the rng function to choose who starts when speeds tie
+            int rnum = rando(0,1);                                                                                                                          // again using the rng function to choose who starts when speeds tie
             switch(rnum) {
                 case(0): {attacker = &p2; defender = &p1; break;}
                 case(1): {attacker = &p1; defender = &p2; break;}
@@ -155,7 +155,7 @@ class Duel {
         while(67) {
             int move_num = 0;
 
-            if(y_n2){ // checking if user is playing as a player
+            if(y_n2){                                                                                                                                       // checking if user is playing as a player
                 if(users_turn) { 
                 std::cout << "[" << (*attacker).name << ": {";
                 int i = 0;
@@ -166,14 +166,14 @@ class Duel {
                 std::cin >> move_num;
                 }
                 else {
-                    if(y_n) { move_num = choose_move(); } // ai analysis choosing move
-                    else { move_num = rando(0,3); } // random choosing move
+                    if(y_n) { move_num = choose_move(); }                                                                                                   // ai analysis choosing move
+                    else { move_num = rando(0,4); }                                                                                                         // random choosing move
                     }
                 }
 
             else {
-                if(y_n) { move_num = choose_move(); } // for ai
-                else { move_num = rando(0,4); } // for random moves (no ai picker)
+                if(y_n) { move_num = choose_move(); } 
+                else { move_num = rando(0,4); }                                                                                                         
             }
 
 
@@ -183,7 +183,7 @@ class Duel {
                 if ((*attacker).hp>(*attacker).maxhp) (*attacker).hp = (*attacker).maxhp;
                 (*attacker).heal_used = 1;
                 std::cout << (*attacker).name << " healed for " << std::round(0.5*(*attacker).maxhp) << " health!" << std::endl << std::endl;
-                if((*attacker).name==p1.name) {attacker = &p2; defender = &p1; users_turn = 0;} // changing turns between attacks if no burning or freezing effects present (after healing move)
+                if((*attacker).name==p1.name) {attacker = &p2; defender = &p1; users_turn = 0;}                                                             // changing turns between attacks if no burning or freezing effects present (after healing move)
                 else if((*attacker).name==p2.name) {attacker = &p1; defender = &p2; users_turn = 1;}
 
                 }
@@ -196,9 +196,9 @@ class Duel {
             else {
             (*attacker).attackmove((*defender),move_num); // the attacking move
 
-            if(((*attacker).is_fainted()) || ((*defender).is_fainted())) break; // only condition to break the always-true while loop
+            if(((*attacker).is_fainted()) || ((*defender).is_fainted())) break;                                                                             // only condition to break the always-true while loop
             
-            if(((*attacker).buried) || ((*defender).buried)) { // burried for the random number of turns
+            if(((*attacker).buried) || ((*defender).buried)) {                                                                                              // burried for the random number of turns
                 turn += 1;
 
                 std::cout << "Turn " << turn << ": " << (*defender).name << " is buried and cannot move!" << std::endl;
@@ -208,7 +208,7 @@ class Duel {
                     (*defender).buried = 0;
                 }
             }
-            else if(((*attacker).frozen) || ((*defender).frozen)) { //frozen for 3 turns
+            else if(((*attacker).frozen) || ((*defender).frozen)) {                                                                                         //frozen for 3 turns
                 turn += 1;
 
                 std::cout << "Turn " << turn << ": " << (*defender).name << " is frozen in a giant solid block of ice!" << std::endl; 
@@ -220,7 +220,7 @@ class Duel {
             }
 
             else {
-                if((*attacker).name==p1.name) {attacker = &p2; defender = &p1; users_turn = 0;} // changing turns between attacks if no burning or freezing effects present
+                if((*attacker).name==p1.name) {attacker = &p2; defender = &p1; users_turn = 0;}                                                             // changing turns between attacks if no burning or freezing effects present
                 else if((*attacker).name==p2.name) {attacker = &p1; defender = &p2; users_turn = 1;}
             }
 
@@ -253,12 +253,12 @@ class Duel {
         winner.buried = 0; winner.frozen = 0; winner.burned = 0;
         winner.buried_used = 0; winner.frozen_used = 0; winner.burned_used = 0, winner.heal_used = 0;
         winner.burned_count = 0;
-        users_turn = 0; // winner stats reset for next match
+        users_turn = 0;                                                                                                                                     // winner stats reset for next match
         
     }
 
     int choose_move() {
-        if ((*attacker).hp < (0.3*(*attacker).maxhp) && !(*attacker).heal_used){std::cout << "AI CHOOSES: HEALING MOVE " << std::endl;  return 5; } // 4 means healing move
+        if ((*attacker).hp < (0.3*(*attacker).maxhp) && !(*attacker).heal_used){std::cout << "AI CHOOSES: HEALING MOVE " << std::endl;  return 4; }         // 4 means healing move
 
         else if (((*defender).hp > (0.7*(*attacker).maxhp)) && ((!(*attacker).burned_used) && (!(*attacker).frozen_used) && (!(*attacker).buried_used))) {
             std::cout << "AI CHOOSES: STATUS MOVE" << std::endl;
@@ -283,7 +283,7 @@ class Duel {
             }
             return maxpower_index;
         }
-        return 0; //most effective move is also the strongest move because same elemental advantage for all 4 moves
+        return 0;                                                                                                                                           //most effective move is also the strongest move because same elemental advantage for all 4 moves
     }
 
 };
@@ -291,6 +291,11 @@ class Duel {
 std::vector<Bender> winners {};
 std::vector<Bender> available {};
 std::vector<Bender> losers {};
+
+struct player_wins {
+    Bender p;
+    int wins;
+};
 
 class Tournament {
     public: 
@@ -303,40 +308,37 @@ class Tournament {
         Bender third_place1 = players[0];
         Bender third_place2 = players[0];
         std::vector<Bender> third;
-        std::vector<Bender> top_four;
-        std::vector<Bender> top_two; //if its only a 2 player tournament (a duel basically), so can't give error
+        std::vector<player_wins> p_wins;
+
+        for(int i = 0; i<players.size(); i++) {                                                                                                             // initializing the wins vector
+            p_wins.push_back({players[i], 0});
+        }
 
         for(Bender player : players) {available.push_back(player);}
-        for(int x = (players.size()); x>1; x/=2) { // each set of rounds, half of the people get eliminated
+        for(int x = (players.size()); x>1; x/=2) {                                                                                                          // each set of rounds, half of the people get eliminated
             while(available.size()>1) {
-                int rnum = rando(0,(available.size()-1)); // randomizing players from the available set to pair up
+                int rnum = rando(0,(available.size()-1));                                                                                                   // randomizing players from the available set to pair up
                 int rnum2 = rando(0,(available.size()-1));
-                while(rnum2 == rnum) { // cant be the same player playing itself
+                while(rnum2 == rnum) {                                                                                                                      // cant be the same player playing itself
                     if (rnum2 != rnum) break;
                     rnum2 = rando(0,(available.size()-1));
                 }
                 Duel duel(available[rnum], available[rnum2]);
                 duel.start_duel();
-                if(available[rnum].name == (duel.winner).name) {winners.push_back(available[rnum]); losers.push_back(available[rnum2]);} // adding to the winners and losers arrays
+
+                for(int i = 0; i < players.size(); i++) {                                                                                                   // adding the win to the wins vector
+                    if(p_wins[i].p.name == duel.winner.name) {
+                        p_wins[i].wins += 1;
+                    }
+                }
+                if(available[rnum].name == (duel.winner).name) {winners.push_back(available[rnum]); losers.push_back(available[rnum2]);}                    // adding to the winners and losers arrays
                 else if (available[rnum2].name == (duel.winner).name) {winners.push_back(available[rnum2]); losers.push_back(available[rnum]);}
-                if (rnum>rnum2) { available.erase((available.begin()) + rnum); available.erase(available.begin() + rnum2);  } // we have to remove the higher index element first becuase index of the higher index element shifts down by 1 if we remove the lower one first
+                if (rnum>rnum2) { available.erase((available.begin()) + rnum); available.erase(available.begin() + rnum2);  }                               // we have to remove the higher index element first becuase index of the higher index element shifts down by 1 if we remove the lower one first
                 else if (rnum2>rnum) { available.erase((available.begin()) + rnum2); available.erase(available.begin() + rnum); }
             }
             if(winners.size() != 1) {
                 std::cout << std::endl << std::endl << std::endl << std::endl << "\t\t\t\t  Players moving on to next round are : ";
             for(Bender player : winners) {available.push_back(player); std::cout << player.name << ", ";}
-                if(players.size()>=4) { //for making top 4 and top 2 list
-                if(winners.size() == 4) {
-                    for(Bender winner : winners) top_four.push_back(winner);
-                }
-                if(players.size() == 4) {
-                    for(Bender winner : players) top_four.push_back(winner);
-                }
-            }
-                if(winners.size() == 2) {
-                    for(Bender winner : winners) top_two.push_back(winner);
-
-            }
                 winners = {};
                 std::cout << std::endl << std::endl << std::endl << std::endl << std::endl;
             
@@ -354,29 +356,18 @@ class Tournament {
                 std::cout << "Status Effects: " << t_status_eff_hits << std::endl;
                 std::cout << "Super Effective Hits: " << t_super_eff_hits << std::endl << std::endl;
 
-                if(players.size()>=4) { //for determining top 4
-                    first_place = winners[0];
-                    for(Bender player : top_two) {
-                        if(player.name != first_place.name) second_place = player;
-                    }
-                    for(Bender player : top_four) {
-                        if((player.name != first_place.name) && (player.name != second_place.name)) {
-                            third.push_back(player);
-                        }
-                    }
-                    third_place1 = third[0]; 
-                    third_place2 = third[1];
-                } 
-
-                if(players.size() == 2) {
-                    first_place = winners[0];
-                    second_place = losers[0];
+                int i = 0;
+                for(int n = players.size(); n > 1; n/=2) { i += 1; }                                                                                            // i will be the number of games played by each player (log(n) (base 2))
+                
+                for(player_wins x  : p_wins) {
+                    if (x.wins == i) first_place = x.p;                                                                                                         //first player wins all games played
+                    else if (x.wins == i-1) second_place = x.p;                                                                                                 //second player only loses one game (the last one)
+                    else if (x.wins == i-2) third.push_back(x.p);                                                                                               //third place has 2 players where both lost only 2 games (if number of players is >= 4)
                 }
-
                 std::cout << "Final Standings:" << std::endl;
                 std::cout << "1st: " << first_place.name << std::endl;
                 std::cout << "2nd: " << second_place.name << std::endl;
-                if(players.size()>=4) std::cout << "3rd: " << third_place1.name << " & " << third_place2.name << " (tied)" << std::endl << std::endl; 
+                if(players.size()>=4) std::cout << "3rd: " << (third[0]).name << " & " << (third[1]).name << " (tied)" << std::endl << std::endl;               // condition necessary because it wont work in a tournament with 2 people
 
                 if(y_n2) {
                     std::cout << "You won in " << users_wins << " battles!" << std::endl;
@@ -394,29 +385,35 @@ int main() {
     char yesorno2;
     
     std::vector<Bender> players = {
-        Bender("Ignis", "Fire", 120, 82, 70, 95, {Move{"Inferno Slash", 60}, Move{"Flame Dash", 38}, Move{"Ember Guard", 0, "Burned"}, Move{"Volcanic Burst", 80}}),
+        Bender("Ignis", "Fire", 120, 82, 70, 95, {Move{"Inferno Slash", 60}, Move{"Flame Dash", 38}, Move{"Ember Guard", 0}, Move{"Volcanic Burst", 80}}),
         Bender("Kestra", "Water", 128, 72, 85, 68, {Move{"Tidal Crush", 65}, Move{"Ice Shard", 45}, Move{"Mist Shield", 0}, Move{"Maelstrom", 85}}),
-        Bender("Terrak", "Earth", 135, 88, 90, 45, {Move{"Stone Avalanche", 50}, Move{"Quake Punch", 48}, Move{"Bulwark", 0, "Burned"}, Move{"Mountain's Wrath", 38}}),
-        Bender("Squall", "Air", 105, 65, 55, 100, {Move{"Thunder Gale", 58}, Move{"Razor Wind", 35}, Move{"Updraft", 0, "Burned"}, Move{"Tempest Strike", 72}}),
-        Bender("Nadia", "Fire", 85, 48, 60, 72, {Move{"Wave Crash", 35}, Move{"Splash Kick", 25}, Move{"Guard", 0, "Burned"}, Move{"Riptide", 50}}),
-        Bender("Talon", "Water", 70, 100, 60, 74, {Move{"Gale Strike", 38}, Move{"Wind Cutter", 28}, Move{"Updraft", 0, "Burned"}, Move{"Cyclone Blast", 48}}),
-        Bender("Mira", "Earth", 130, 38, 40, 92, {Move{"Wave Crash", 35}, Move{"Splash Kick", 25}, Move{"Guard", 0, "Burned"}, Move{"Riptide", 50}}),
-        Bender("Kael", "Air", 90, 52, 55, 72, {Move{"Gale Strike", 58}, Move{"Wind Cutter", 38}, Move{"Updraft", 0}, Move{"Cyclone Blast", 80}})
+        Bender("Terrak", "Earth", 135, 88, 90, 45, {Move{"Stone Avalanche", 50}, Move{"Quake Punch", 48}, Move{"Bulwark", 0}, Move{"Mountain's Wrath", 38}}),
+        Bender("Squall", "Air", 105, 65, 55, 100, {Move{"Thunder Gale", 58}, Move{"Razor Wind", 35}, Move{"Updraft", 0}, Move{"Tempest Strike", 72}}),
+        Bender("Nadia", "Fire", 85, 48, 60, 72, {Move{"Wave Crash", 35}, Move{"Splash Kick", 25}, Move{"Guard", 0}, Move{"Riptide", 50}}),
+        Bender("Talon", "Water", 70, 100, 60, 74, {Move{"Oblivion Wing", 38}, Move{"Astral Barrage", 28}, Move{"Medkit", 0}, Move{"Atomic Bomb", 48}}),
+        Bender("Mira", "Earth", 130, 38, 40, 92, {Move{"Blue Flare", 35}, Move{"Glaive Rush", 25}, Move{"Riot Shield", 0}, Move{"Riptide", 50}}),
+        Bender("Kael", "Air", 90, 52, 55, 72, {Move{"Gale Strike", 58}, Move{"Wind Cutter", 38}, Move{"Updraft", 0}, Move{"Draco Meteor", 80}})
     };
 
-    int n = players.size(); //making sure that number of players is power of 2
+    std::vector<std::string> status_eff_list {"Burned", "Frozen", "Buried", "None"};                                                                            // assigning random status effect to each bender
+    for(int i = 1; i < players.size(); i++) { 
+        int a = rando(0,3);
+        (players[i].moves)[2].status_eff = status_eff_list[a];
+    }
+
+    int n = players.size();                                                                                                                                     //making sure that number of players is power of 2
     while(n%2 == 0)  {
         n/=2;
     }
     if(n!=1) {std::cout << "Number of players in the tournament must be a power of 2" << std::endl; return 0;}
     
-    std::cout << "Do you want to play as a player? (Y/N) : "; //asking if player wants to choose moves
+    std::cout << "Do you want to play as a player? (Y/N) : ";                                                                                                   //asking if player wants to choose moves
     std::cin >> yesorno2;
     if((yesorno2 == 'Y') || (yesorno2 == 'y')) y_n2 = 1;
     else if((yesorno2 == 'N') || (yesorno2 == 'n')) y_n2 = 0;
     else { std::cout <<  "INVALID INPUT" << std::endl; return 0; }
 
-    std::cout << "AI Analysis? (Y/N) : ";   //asking for ai analysis
+    std::cout << "AI Analysis? (Y/N) : ";                                                                                                                       //asking for ai analysis
     std::cin >> yesorno; 
     if((yesorno == 'Y') || (yesorno == 'y')) y_n = 1;
     else if((yesorno == 'N') || (yesorno == 'n')) y_n = 0;
